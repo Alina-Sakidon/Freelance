@@ -4,7 +4,6 @@ import API.Api;
 import API.ApiException;
 import API.entity.UserAuth;
 import PageObjects.*;
-import com.codeborne.selenide.SelenideElement;
 import com.github.javafaker.Faker;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -13,16 +12,17 @@ import java.io.IOException;
 import java.util.Random;
 
 public class UserStories extends BaseTest {
-Faker faker = new Faker();
-Random random = new Random();
-UserAuth userAuth = new UserAuth();
 
-final String username = faker.name().username();
-final String password = "!Devart2019";
-final String jobTitle = faker.job().title();
-final String jobDescription = faker.job().position();
-final int jobPrice = random.nextInt(10000);
-final  String jobComment = faker.company().profession();
+    Faker faker = new Faker();
+    Random random = new Random();
+    UserAuth userAuth = new UserAuth();
+
+    final String username = faker.name().username();
+    final String password = "!Devart2019";
+    final String jobTitle = faker.job().title();
+    final String jobDescription = faker.job().position();
+    final int jobPrice = random.nextInt(10000);
+    final  String jobComment = faker.company().profession();
 
 
     @Test(priority = 1)
@@ -72,8 +72,8 @@ final  String jobComment = faker.company().profession();
                 .goToProfilePage()
                 .goToAddJobPage()
                 .setNewJob(jobTitle,jobDescription,jobPrice)
-                .saveNewJob()
-                .isCreatedJobPresent(jobTitle,jobDescription,jobPrice);
+                .saveNewJob();
+        Assert.assertTrue(profilePage.isCreatedJobPresent(jobTitle,jobDescription,jobPrice));
     }
     @Test(priority = 5)
     public void addComment() throws InterruptedException {
@@ -88,14 +88,13 @@ final  String jobComment = faker.company().profession();
     }
     @Test(priority = 6)
     public void viewJobDetails() throws InterruptedException {
-        openUrl().goToLoginPage()
+        ProfilePage profilePage = openUrl().goToLoginPage()
                 .enterLogin(username)
                 .enterPassword(password)
                 .loginUser()
                 .goToProfilePage()
-                .viewAllCommentsForUserJobs()
-                .deleteAnyJob();
+                .viewAllCommentsForUserJobs();
+                Assert.assertTrue(profilePage.deleteAnyJob());
 
     }
-
 }

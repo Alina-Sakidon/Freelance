@@ -32,8 +32,7 @@ public class LoginPage extends BasePage{
     }
     @Step("isLoginPageDisplayed")
     public boolean isLoginPageDisplayed(){
-           var a =  titleLoginPage.shouldBe(Condition.appear);
-           var v = a.isDisplayed();
-            return titleLoginPage.isDisplayed();
+        titleLoginPage.shouldBe(Condition.appear);
+        return titleLoginPage.isDisplayed();
     }
 }

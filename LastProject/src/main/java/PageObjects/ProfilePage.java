@@ -1,17 +1,8 @@
 package PageObjects;
-
-import API.entity.Job;
 import com.codeborne.selenide.*;
 import io.qameta.allure.Step;
-import org.openqa.selenium.By;
-import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.chrome.ChromeDriver;
-import org.testng.Assert;
 
 import java.io.File;
-import java.util.stream.Collectors;
-
 import static com.codeborne.selenide.Selenide.*;
 
 public class ProfilePage extends BasePage {
@@ -61,15 +52,12 @@ public class ProfilePage extends BasePage {
     }
 
     @Step("isCreatedJobPresent")
-    public ProfilePage isCreatedJobPresent(String title, String description, int price) {
+    public boolean isCreatedJobPresent(String title, String description, int price) {
         String priceText = Integer.toString(price);
         allJobs.shouldBe(CollectionCondition.sizeGreaterThan(0));
         SelenideElement addedJob = allJobs.get(0);
         String jobText = addedJob.text();
-        Assert.assertTrue(jobText.contains(title));
-        Assert.assertTrue(jobText.contains(description));
-        Assert.assertTrue(jobText.contains(priceText));
-        return this;
+        return jobText.contains(title)&&jobText.contains(description)&&jobText.contains(priceText);
     }
     @Step("viewAllCommentsForUserJobs")
     public ProfilePage viewAllCommentsForUserJobs() throws InterruptedException {
@@ -79,13 +67,12 @@ public class ProfilePage extends BasePage {
         return new ProfilePage();
     }
     @Step("delete first Job")
-    public ProfilePage deleteAnyJob() throws InterruptedException {
+    public boolean deleteAnyJob() throws InterruptedException {
         int countOfJobsBefore = listJobTitles.size();
         buttonsDelete.first().click();
         Selenide.switchTo().alert().accept();
         int countOfJobsAfter = listJobTitles.shouldBe(CollectionCondition.sizeLessThan(countOfJobsBefore)).size();
-        Assert.assertTrue(countOfJobsBefore>countOfJobsAfter);
-        return new ProfilePage();
+        return countOfJobsBefore>countOfJobsAfter;
     }
 
 }
